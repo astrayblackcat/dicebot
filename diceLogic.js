@@ -2,6 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rollDice = void 0;
 const regex = /^(\d+)?d(\d+)(kh(\d))?/;
+/*
+relevant details of the dice array returned from the regex is structured as so:
+[
+    rollStr,
+    numDice (defaults to 1)
+    sides,
+    keepHighest (optional, defaults to false),
+    khNum (optional, defaults to 1)
+]
+*/
 const rollDice = (input) => {
     if (regex.test(input) == false) {
         throw new Error('Invalid input!');

@@ -11,14 +11,6 @@ relevant details of the dice array returned from the regex is structured as so:
 ]
 */
 
-type dice = {
-    rollStr: string;
-    numDice: number;
-    sides: number;
-    keepHighest: boolean;
-    khNum: number;
-}
-
 export const rollDice = (input: string) => {
     if (regex.test(input) == false) {
         throw new Error('Invalid input!')
