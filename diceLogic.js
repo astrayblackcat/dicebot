@@ -46,5 +46,8 @@ const roll = (dice) => {
     else {
         result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue, result);
     }
+    if (dice.sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
+        return `Rolling ${dice.rollStr}: [${diceRolls.join(', ').replaceAll('6', '**6**')}] = **${result}!**`;
+    }
     return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
 };
