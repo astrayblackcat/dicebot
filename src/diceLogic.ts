@@ -23,7 +23,12 @@ export const rollDice = (input: string) => {
         keepHighest : (typeof match![3] == 'undefined') ? false : true,
         khNum       : (typeof match![4] == 'undefined') ? 1 : parseInt(match![4]),
     }
-    return(roll(dice));
+    if (dice.numDice > 100 || dice.sides > 100) {
+        return "Numbers cannot exceed 100 or Blake will yell at you for breaking the bot."
+    } else {
+        return(roll(dice));
+    }
+    
 }
 
 const roll = (dice: {rollStr: string, numDice: number, sides: number, keepHighest: boolean, khNum: number}) => {

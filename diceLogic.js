@@ -24,7 +24,12 @@ const rollDice = (input) => {
         keepHighest: (typeof match[3] == 'undefined') ? false : true,
         khNum: (typeof match[4] == 'undefined') ? 1 : parseInt(match[4]),
     };
-    return (roll(dice));
+    if (dice.numDice > 100 || dice.sides > 100) {
+        return "Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.";
+    }
+    else {
+        return (roll(dice));
+    }
 };
 exports.rollDice = rollDice;
 const roll = (dice) => {

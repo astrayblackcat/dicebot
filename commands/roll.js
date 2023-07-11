@@ -11,7 +11,12 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         const roll = interaction.options.getString('dice');
-        let output = rollDice(roll)
-		return interaction.reply(output);
+        try {
+            let output = rollDice(roll)
+            return interaction.reply(output);
+        } catch {
+            return interaction.reply({content: 'Error, invalid input. (You probably had spaces, or typed gibberish)', ephemeral: true})
+        }
+		
     },
 };
