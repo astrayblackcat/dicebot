@@ -5,14 +5,15 @@ const regex = /^(\d+)?d(\d+)(kh(\d))?/;
 /*
 relevant details of the dice array returned from the regex is structured as so:
 [
-    rollStr,
-    numDice (defaults to 1)
-    sides,
-    keepHighest (optional, defaults to false),
-    khNum (optional, defaults to 1)
+  rollStr,
+  numDice (defaults to 1)
+  sides,
+  keepHighest (optional, defaults to false),
+  khNum (optional, defaults to 1)
 ]
 */
 const rollDice = (input) => {
+    console.log(`Rolling with input: ${input}`);
     if (regex.test(input) == false) {
         throw new Error('Invalid input!');
     }
@@ -47,7 +48,9 @@ const roll = (dice) => {
         result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue, result);
     }
     if (dice.sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
-        return `Rolling ${dice.rollStr}: [${diceRolls.join(', ').replaceAll('6', '**6**')}] = **${result}!**`;
+        return `Rolling ${dice.rollStr}: [${diceRolls
+            .join(", ")
+            .replaceAll("6", "**6**")}] = **${result}!**`;
     }
     return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
 };

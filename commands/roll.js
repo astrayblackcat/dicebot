@@ -3,8 +3,8 @@ const { rollDice } = require('../diceLogic');
 
 module.exports = {
     data: new SlashCommandBuilder()
-		.setName('roll')
-		.setDescription('Rolls dice.')
+        .setName('roll')
+        .setDescription('Rolls dice.')
         .addStringOption(option =>
             option.setName('dice')
                 .setDescription('How many, and what type of dice to roll. e.g. "1d6" or "2d20kh1"')
@@ -17,6 +17,6 @@ module.exports = {
         } catch {
             return interaction.reply({content: 'Error, invalid input. (You probably had spaces, or typed gibberish)', ephemeral: true})
         }
-		
+        
     },
 };
