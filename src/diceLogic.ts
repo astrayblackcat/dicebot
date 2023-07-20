@@ -31,27 +31,35 @@ export const rollDice = (input: string) => {
   }
 };
 
-const roll = (dice: { rollStr: string, numDice: number, sides: number, keepHighest: boolean, khNum: number }) => {
+const roll = (dice: { 
+  rollStr: string, 
+  numDice: number, 
+  sides: number, 
+  keepHighest: boolean, 
+  khNum: number 
+  }) => {
   let diceRolls: number[] = [];
   let result = 0;
   for (let i = 0; i < dice.numDice; i++) {
     diceRolls.push(Math.floor(Math.random() * dice.sides + 1))
   }
+  
   if (dice.keepHighest) {
     let highestRolls = [...diceRolls];
     highestRolls.sort((a, b) => b - a).splice(dice.khNum);
     result = highestRolls.reduce(
-      (accumulator, currentValue) => accumulator + currentValue, result)
+      (accumulator, currentValue) => accumulator + currentValue)
   } else {
     result = diceRolls.reduce(
-      (accumulator, currentValue) => accumulator + currentValue, result)
+      (accumulator, currentValue) => accumulator + currentValue)
   }
 
   if (dice.sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
     return `Rolling ${dice.rollStr}: [${diceRolls
       .join(", ")
       .replaceAll("6", "**6**")}] = **${result}!**`;
+  } else {
+    return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
   }
-  return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
 };
 

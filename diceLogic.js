@@ -42,15 +42,17 @@ const roll = (dice) => {
     if (dice.keepHighest) {
         let highestRolls = [...diceRolls];
         highestRolls.sort((a, b) => b - a).splice(dice.khNum);
-        result = highestRolls.reduce((accumulator, currentValue) => accumulator + currentValue, result);
+        result = highestRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
     else {
-        result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue, result);
+        result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
     if (dice.sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
         return `Rolling ${dice.rollStr}: [${diceRolls
             .join(", ")
             .replaceAll("6", "**6**")}] = **${result}!**`;
     }
-    return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
+    else {
+        return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
+    }
 };
