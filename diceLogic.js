@@ -2,16 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rollDice = void 0;
 const regex = /^(\d+)?d(\d+)(kh(\d))?/;
-/*
-relevant details of the dice array returned from the regex is structured as so:
-[
-  rollStr,
-  numDice (defaults to 1)
-  sides,
-  keepHighest (optional, defaults to false),
-  khNum (optional, defaults to 1)
-]
-*/
 const rollDice = (input) => {
     console.log(`Rolling with input: ${input}`);
     if (regex.test(input) == false) {
@@ -33,26 +23,26 @@ const rollDice = (input) => {
     }
 };
 exports.rollDice = rollDice;
-const roll = (dice) => {
+const roll = ({ rollStr, numDice, sides, keepHighest, khNum }) => {
     let diceRolls = [];
     let result = 0;
-    for (let i = 0; i < dice.numDice; i++) {
-        diceRolls.push(Math.floor(Math.random() * dice.sides + 1));
+    for (let i = 0; i < numDice; i++) {
+        diceRolls.push(Math.floor(Math.random() * sides + 1));
     }
-    if (dice.keepHighest) {
+    if (keepHighest) {
         let highestRolls = [...diceRolls];
-        highestRolls.sort((a, b) => b - a).splice(dice.khNum);
+        highestRolls.sort((a, b) => b - a).splice(khNum);
         result = highestRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
     else {
         result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
-    if (dice.sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
-        return `Rolling ${dice.rollStr}: [${diceRolls
+    if (sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
+        return `Rolling ${rollStr}: [${diceRolls
             .join(", ")
             .replaceAll("6", "**6**")}] = **${result}!**`;
     }
     else {
-        return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
+        return `Rolling ${rollStr}: [${diceRolls.join(', ')}] = ${result}`;
     }
 };

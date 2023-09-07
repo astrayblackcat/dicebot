@@ -1,15 +1,12 @@
 const regex = /^(\d+)?d(\d+)(kh(\d))?/;
 
-/*
-relevant details of the dice array returned from the regex is structured as so:
-[
-  rollStr,
-  numDice (defaults to 1)
-  sides,
-  keepHighest (optional, defaults to false),
-  khNum (optional, defaults to 1)
-]
-*/
+type Dice = {
+  rollStr: string; 
+  numDice: number; 
+  sides: number;
+  keepHighest: boolean; 
+  khNum: number;
+};
 
 export const rollDice = (input: string) => {
   console.log(`Rolling with input: ${input}`);
@@ -31,22 +28,16 @@ export const rollDice = (input: string) => {
   }
 };
 
-const roll = (dice: { 
-  rollStr: string, 
-  numDice: number, 
-  sides: number, 
-  keepHighest: boolean, 
-  khNum: number 
-  }) => {
+const roll = ({rollStr, numDice, sides, keepHighest, khNum}: Dice) => {
   let diceRolls: number[] = [];
   let result = 0;
-  for (let i = 0; i < dice.numDice; i++) {
-    diceRolls.push(Math.floor(Math.random() * dice.sides + 1))
+  for (let i = 0; i < numDice; i++) {
+    diceRolls.push(Math.floor(Math.random() * sides + 1))
   }
   
-  if (dice.keepHighest) {
+  if (keepHighest) {
     let highestRolls = [...diceRolls];
-    highestRolls.sort((a, b) => b - a).splice(dice.khNum);
+    highestRolls.sort((a, b) => b - a).splice(khNum);
     result = highestRolls.reduce(
       (accumulator, currentValue) => accumulator + currentValue)
   } else {
@@ -54,12 +45,12 @@ const roll = (dice: {
       (accumulator, currentValue) => accumulator + currentValue)
   }
 
-  if (dice.sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
-    return `Rolling ${dice.rollStr}: [${diceRolls
+  if (sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
+    return `Rolling ${rollStr}: [${diceRolls
       .join(", ")
       .replaceAll("6", "**6**")}] = **${result}!**`;
   } else {
-    return `Rolling ${dice.rollStr}: [${diceRolls.join(', ')}] = ${result}`;
+    return `Rolling ${rollStr}: [${diceRolls.join(', ')}] = ${result}`;
   }
 };
 
