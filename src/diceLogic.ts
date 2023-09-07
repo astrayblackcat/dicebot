@@ -1,4 +1,12 @@
-const regex = /^(\d+)?d(\d+)(kh(\d))?/;
+import { DiceRoller } from "dice-roller-parser";
+
+const roll = (input: string) => {
+  let dice = new DiceRoller(undefined, 100);
+  let roll = dice.roll(input);
+  console.log(roll);
+}
+
+/*const regex = /^(\d+)?d(\d+)(kh(\d))?/;
 
 type Dice = {
   rollStr: string; 
@@ -53,4 +61,4 @@ const roll = ({rollStr, numDice, sides, keepHighest, khNum}: Dice) => {
     return `Rolling ${rollStr}: [${diceRolls.join(', ')}] = ${result}`;
   }
 };
-
+*/
