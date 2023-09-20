@@ -21,14 +21,14 @@ const rollDice = (input) => {
         else {
             let match = regex.exec(elem.toLowerCase());
             let dice = {
-                numDice: (typeof match[1] == 'undefined') ? 1 : parseInt(match[1]),
+                numDice: typeof match[1] == "undefined" ? 1 : parseInt(match[1]),
                 sides: parseInt(match[2]),
-                keepHighest: (typeof match[3] == 'undefined') ? false : true,
-                khNum: (typeof match[4] == 'undefined') ? 1 : parseInt(match[4]),
+                keepHighest: typeof match[3] == "undefined" ? false : true,
+                khNum: typeof match[4] == "undefined" ? 1 : parseInt(match[4]),
             };
             if (dice.numDice > 100 || dice.sides > 100) {
                 const error = new Error(`Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.`);
-                error.code = 'TooHigh';
+                error.code = "TooHigh";
                 throw error;
             }
             else {
