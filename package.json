@@ -10,7 +10,6 @@
   "author": "",
   "license": "GPL",
   "dependencies": {
-    "dice-roller-parser": "^0.1.8",
     "discord.js": "^14.11.0",
     "typescript": "^5.1.6"
   }

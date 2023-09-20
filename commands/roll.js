@@ -14,8 +14,13 @@ module.exports = {
         try {
             let output = rollDice(roll)
             return interaction.reply(output);
-        } catch {
-            return interaction.reply({content: 'Error, invalid input. (You probably had spaces, or typed gibberish)', ephemeral: true})
+        } catch (err) {
+            if (err.code === `TooHigh`) {
+                return interaction.reply(err.message);
+            } else {
+                return interaction.reply({content: 'Error, invalid input. (You probably had spaces, or typed gibberish)', ephemeral: true})
+            }
+            
         }
         
     },
