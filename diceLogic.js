@@ -4,26 +4,44 @@ exports.rollDice = void 0;
 const regex = /^(\d+)?d(\d+)(kh(\d))?/;
 const rollDice = (input) => {
     console.log(`Rolling with input: ${input}`);
-    if (regex.test(input) == false) {
-        throw new Error('Invalid input!');
-    }
-    let match = regex.exec(input.toLowerCase());
-    let dice = {
-        rollStr: match[0],
-        numDice: (typeof match[1] == 'undefined') ? 1 : parseInt(match[1]),
-        sides: parseInt(match[2]),
-        keepHighest: (typeof match[3] == 'undefined') ? false : true,
-        khNum: (typeof match[4] == 'undefined') ? 1 : parseInt(match[4]),
-    };
-    if (dice.numDice > 100 || dice.sides > 100) {
-        return "Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.";
-    }
-    else {
-        return (roll(dice));
-    }
+    let inputArr = input.split("+");
+    let rollStr = "";
+    let bonusStr = "";
+    let total = 0;
+    inputArr.forEach((elem) => {
+        if (!regex.test(elem) && !Number(elem)) {
+            throw new Error("Invalid input!");
+        }
+    });
+    inputArr.forEach((elem) => {
+        if (Number(elem)) {
+            total += Number(elem);
+            bonusStr += ` + ${elem}`;
+        }
+        else {
+            let match = regex.exec(elem.toLowerCase());
+            let dice = {
+                numDice: (typeof match[1] == 'undefined') ? 1 : parseInt(match[1]),
+                sides: parseInt(match[2]),
+                keepHighest: (typeof match[3] == 'undefined') ? false : true,
+                khNum: (typeof match[4] == 'undefined') ? 1 : parseInt(match[4]),
+            };
+            if (dice.numDice > 100 || dice.sides > 100) {
+                const error = new Error(`Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.`);
+                error.code = 'TooHigh';
+                throw error;
+            }
+            else {
+                let currentRoll = roll(dice);
+                rollStr += `[${currentRoll.rolls}]`;
+                total += currentRoll.sum;
+            }
+        }
+    });
+    return `Rolling ${input}: ${rollStr}${bonusStr} = ${total}`;
 };
 exports.rollDice = rollDice;
-const roll = ({ rollStr, numDice, sides, keepHighest, khNum }) => {
+const roll = ({ numDice, sides, keepHighest, khNum }) => {
     let diceRolls = [];
     let result = 0;
     for (let i = 0; i < numDice; i++) {
@@ -37,12 +55,12 @@ const roll = ({ rollStr, numDice, sides, keepHighest, khNum }) => {
     else {
         result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
-    if (sides == 6 && diceRolls.filter(num => num == 6).length > 1) {
-        return `Rolling ${rollStr}: [${diceRolls
-            .join(", ")
-            .replaceAll("6", "**6**")}] = **${result}!**`;
+    let rollList = diceRolls.join(", ");
+    if (sides == 6 && diceRolls.filter((num) => num == 6).length > 1) {
+        rollList = rollList.replaceAll("6", "**6**");
     }
-    else {
-        return `Rolling ${rollStr}: [${diceRolls.join(', ')}] = ${result}`;
-    }
+    return {
+        rolls: rollList,
+        sum: result,
+    };
 };
