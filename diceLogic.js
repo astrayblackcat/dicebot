@@ -7,6 +7,7 @@ const rollDice = (input) => {
     let inputArr = input.split("+");
     let rollStr = "";
     let bonusStr = "";
+    let maxRoll = 0;
     let total = 0;
     inputArr.forEach((elem) => {
         if (!regex.test(elem) && !Number(elem)) {
@@ -37,23 +38,39 @@ const rollDice = (input) => {
                 let currentRoll = roll(dice);
                 rollStr += `[${currentRoll.rolls}]`;
                 total += currentRoll.sum;
+                maxRoll += getMaxRoll(dice);
             }
         }
     });
-    return `Rolling ${input}: ${rollStr}${bonusStr} = ${total}`;
-};
-exports.rollDice = rollDice;
-const roll = ({ numDice, sides, keepHighest, khNum, keepLowest, klNum }) => {
-    let diceRolls = [];
-    let result = 0;
-    for (let i = 0; i < numDice; i++) {
-        diceRolls.push(Math.floor(Math.random() * sides + 1));
-    }
-    if (!keepHighest && !keepLowest) {
-        result = diceRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
+    if (total === maxRoll) {
+        return `Rolling ${input}: ${rollStr}${bonusStr} = **${total}!**`;
     }
     else {
-        let sortedRolls = [...diceRolls];
+        return `Rolling ${input}: ${rollStr}${bonusStr} = ${total}`;
+    }
+};
+exports.rollDice = rollDice;
+const roll = (dice) => {
+    let diceRolls = [];
+    let result = 0;
+    for (let i = 0; i < dice.numDice; i++) {
+        diceRolls.push(Math.floor(Math.random() * dice.sides + 1));
+    }
+    result = checkKeep(diceRolls, dice);
+    let rollList = diceRolls.join(", ");
+    rollList = rollList.replaceAll(`${dice.sides}`, `**${dice.sides}**`);
+    return {
+        rolls: rollList,
+        sum: result,
+    };
+};
+const checkKeep = (rolls, { keepHighest, khNum, keepLowest, klNum }) => {
+    let result = 0;
+    if (!keepHighest && !keepLowest) {
+        result = rolls.reduce((accumulator, currentValue) => accumulator + currentValue);
+    }
+    else {
+        let sortedRolls = [...rolls];
         if (keepHighest) {
             sortedRolls.sort((a, b) => b - a).splice(khNum);
         }
@@ -62,12 +79,16 @@ const roll = ({ numDice, sides, keepHighest, khNum, keepLowest, klNum }) => {
         }
         result = sortedRolls.reduce((accumulator, currentValue) => accumulator + currentValue);
     }
-    let rollList = diceRolls.join(", ");
-    if (sides == 6 && diceRolls.filter((num) => num == 6).length > 1) {
-        rollList = rollList.replaceAll("6", "**6**");
+    return result;
+};
+const getMaxRoll = ({ numDice, sides, keepHighest, khNum, keepLowest, klNum }) => {
+    if (keepHighest && numDice > khNum) {
+        return sides * khNum;
     }
-    return {
-        rolls: rollList,
-        sum: result,
-    };
+    else if (keepLowest && numDice > klNum) {
+        return sides * klNum;
+    }
+    else {
+        return sides * numDice;
+    }
 };
