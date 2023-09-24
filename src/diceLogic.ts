@@ -1,10 +1,12 @@
-const regex = /^(\d+)?d(\d+)(kh(\d))?/;
+const regex = /^(\d+)?d(\d+)((kh(\d)?)|(kl(\d)?)?)/;
 
 type Dice = {
   numDice: number; 
   sides: number;
   keepHighest: boolean; 
   khNum: number;
+  keepLowest: boolean;
+  klNum: number;
 };
 
 export const rollDice = (input: string) => {
@@ -19,7 +21,6 @@ export const rollDice = (input: string) => {
       throw new Error("Invalid input!");
     }
   })
- 
 
   inputArr.forEach((elem) => {
     if (Number(elem)) {
@@ -30,8 +31,10 @@ export const rollDice = (input: string) => {
       let dice = {
         numDice: typeof match![1] == "undefined" ? 1 : parseInt(match![1]),
         sides: parseInt(match![2]),
-        keepHighest: typeof match![3] == "undefined" ? false : true,
-        khNum: typeof match![4] == "undefined" ? 1 : parseInt(match![4]),
+        keepHighest: typeof match![4] == "undefined" ? false : true,
+        khNum: typeof match![5] == "undefined" ? 1 : parseInt(match![5]),
+        keepLowest: typeof match![6] == "undefined" ? false : true,
+        klNum: typeof match![7] == "undefined" ? 1 : parseInt(match![7]),
       };
       if (dice.numDice > 100 || dice.sides > 100) {
         const error = new Error(`Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.`,);
@@ -47,22 +50,27 @@ export const rollDice = (input: string) => {
   return `Rolling ${input}: ${rollStr}${bonusStr} = ${total}`;
 };
 
-const roll = ({numDice, sides, keepHighest, khNum}: Dice) => {
+const roll = ({numDice, sides, keepHighest, khNum, keepLowest, klNum}: Dice) => {
   let diceRolls: number[] = [];
   let result = 0;
   for (let i = 0; i < numDice; i++) {
     diceRolls.push(Math.floor(Math.random() * sides + 1))
   }
   
-  if (keepHighest) {
-    let highestRolls = [...diceRolls];
-    highestRolls.sort((a, b) => b - a).splice(khNum);
-    result = highestRolls.reduce(
-      (accumulator, currentValue) => accumulator + currentValue)
-  } else {
+  if (!keepHighest && !keepLowest) {
     result = diceRolls.reduce(
       (accumulator, currentValue) => accumulator + currentValue)
+  } else {
+    let sortedRolls = [...diceRolls]
+    if (keepHighest) {
+      sortedRolls.sort((a, b) => b - a).splice(khNum);
+    } else if (keepLowest) {
+      sortedRolls.sort((a, b) => a - b).splice(klNum);
+    }
+    result = sortedRolls.reduce(
+      (accumulator, currentValue) => accumulator + currentValue)
   }
+  
   let rollList = diceRolls.join(", ");
   if (sides == 6 && diceRolls.filter((num) => num == 6).length > 1) {
     rollList = rollList.replaceAll("6", "**6**");
