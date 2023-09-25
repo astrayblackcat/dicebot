@@ -1,12 +1,11 @@
-const regex = /^(\d+)?d(\d+)((kh(\d)?)|(kl(\d)?)?)/;
+const regex = /^(\d+)?d(\d+)(k([hl])(\d)?)?/;
 
 type Dice = {
   numDice: number; 
   sides: number;
-  keepHighest: boolean; 
-  khNum: number;
-  keepLowest: boolean;
-  klNum: number;
+  isKeep: boolean;
+  keepType: string | undefined; //either undefined, h (highest), or l (lowest)
+  keepNum: number;
 };
 
 export const rollDice = (input: string) => {
@@ -25,17 +24,17 @@ export const rollDice = (input: string) => {
 
   inputArr.forEach((elem) => {
     if (Number(elem)) {
-      total += Number(elem);
+      total += +elem;
+      maxRoll += +elem;
       bonusStr += ` + ${elem}`;
     } else {
       let match = regex.exec(elem.toLowerCase());
       let dice = {
         numDice: typeof match![1] == "undefined" ? 1 : parseInt(match![1]),
         sides: parseInt(match![2]),
-        keepHighest: typeof match![4] == "undefined" ? false : true,
-        khNum: typeof match![5] == "undefined" ? 1 : parseInt(match![5]),
-        keepLowest: typeof match![6] == "undefined" ? false : true,
-        klNum: typeof match![7] == "undefined" ? 1 : parseInt(match![7]),
+        isKeep: typeof match![3] == "undefined" ? false : true,
+        keepType: typeof match![3] == "undefined" ? undefined : match![4],
+        keepNum: typeof match![5] == "undefined" ? 1 : parseInt(match![5]),
       };
       if (dice.numDice > 100 || dice.sides > 100) {
         const error = new Error(`Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.`,);
@@ -73,17 +72,17 @@ const roll = (dice: Dice) => {
   };
 };
 
-const checkKeep = (rolls: number[], {keepHighest, khNum, keepLowest, klNum}: Dice) => {
+const checkKeep = (rolls: number[], {isKeep, keepType, keepNum}: Dice) => {
   let result = 0;
-  if (!keepHighest && !keepLowest) {
+  if (!isKeep) {
     result = rolls.reduce(
       (accumulator, currentValue) => accumulator + currentValue)
   } else {
     let sortedRolls = [...rolls]
-    if (keepHighest) {
-      sortedRolls.sort((a, b) => b - a).splice(khNum);
-    } else if (keepLowest) {
-      sortedRolls.sort((a, b) => a - b).splice(klNum);
+    if (keepType === "h") {
+      sortedRolls.sort((a, b) => b - a).splice(keepNum);
+    } else if (keepType === "l") {
+      sortedRolls.sort((a, b) => a - b).splice(keepNum);
     }
     result = sortedRolls.reduce(
       (accumulator, currentValue) => accumulator + currentValue)
@@ -91,11 +90,9 @@ const checkKeep = (rolls: number[], {keepHighest, khNum, keepLowest, klNum}: Dic
   return result;
 }
 
-const getMaxRoll = ({numDice, sides, keepHighest, khNum, keepLowest, klNum}: Dice) => {
-  if (keepHighest && numDice > khNum) {
-    return sides * khNum
-  } else if (keepLowest && numDice > klNum) {
-    return sides * klNum
+const getMaxRoll = ({numDice, sides, isKeep, keepNum}: Dice) => {
+  if (isKeep && numDice > keepNum) {
+    return sides * keepNum
   } else {
     return sides * numDice;
   }
