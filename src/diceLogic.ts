@@ -24,8 +24,6 @@ export const rollDice = (input: string) => {
 
   inputArr.forEach((elem) => {
     if (Number(elem)) {
-      total += +elem;
-      maxRoll += +elem;
       bonusStr += ` + ${elem}`;
     } else {
       let match = regex.exec(elem.toLowerCase());
