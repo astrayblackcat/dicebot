@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { rollDice } = require('../diceLogic');
+const { rollDice } = require('../functions/dice-logic');
 
 module.exports = {
     data: new SlashCommandBuilder()

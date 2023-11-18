@@ -35,6 +35,7 @@ for (const file of eventFiles) {
 	}
 }
 
+client.on('test', console.log)
 
 // Log in to Discord with your client's token
 client.login(token);
