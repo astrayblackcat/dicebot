@@ -26,7 +26,7 @@ module.exports = {
 		embed.setAuthor({name: randomPost[0].author.globalName, iconURL: randomPost[0].author.displayAvatarURL()})
 		embed.setDescription(`${randomPost}\n\n${messageLink(randomPost[0].channelId, randomPost[0].id)}`)
 		embed.setURL(messageLink(randomPost[0].channelId, randomPost[0].id))
-		embed.setTimestamp()
+		embed.setTimestamp(randomPost[0].createdTimestamp)
 		targetChannel.send({embeds: [embed]})
 	},
 };
