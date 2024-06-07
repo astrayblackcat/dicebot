@@ -1,9 +1,9 @@
-const { REST, Routes } = require('discord.js');
-const { clientId, token } = require('./config.json');
-const fs = require('node:fs');
-const path = require('node:path');
+import { REST, Routes } from 'discord.js';
+import { token, clientId } from '../config.json';
+import fs from 'node:fs'
+import path from 'node:path';
 
-const commands = [];
+const commands: any[] = [];
 // Grab all the command files from the commands directory you created earlier
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -32,8 +32,11 @@ const rest = new REST().setToken(token);
       Routes.applicationCommands(clientId),
       { body: commands },
     );
-
-    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    if (data instanceof Array) {
+      console.log(`Successfully reloaded ${data.length} application (/) commands.`); 
+    } else {
+      console.error(`Did not successfully reload application (/) commands.`)
+    }
   } catch (error) {
     // And of course, make sure you catch and log any errors!
     console.error(error);

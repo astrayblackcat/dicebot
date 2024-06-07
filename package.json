@@ -2,7 +2,7 @@
   "name": "test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,5 +13,8 @@
     "discord.js": "^14.11.0",
     "node-cron": "^3.0.3",
     "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/node-cron": "^3.0.11"
   }
 }

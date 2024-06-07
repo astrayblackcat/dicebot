@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js');
-const { rollDice } = require('../functions/dice-logic');
+import { SlashCommandBuilder } from 'discord.js';
+import type { ChatInputCommandInteraction } from 'discord.js';
+import { rollDice } from '../functions/dice-logic';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,12 +10,13 @@ module.exports = {
 			option.setName('dice')
 						.setDescription('How many, and what type of dice to roll. e.g. "1d6" or "2d20kh1"')
 						.setRequired(true)),
-	async execute(interaction) {
+	async execute(interaction: ChatInputCommandInteraction) {
 		const roll = interaction.options.getString('dice');
+		if (roll == null) return new Error();
 		try {
 				let output = rollDice(roll)
 				return interaction.reply(output);
-		} catch (err) {
+		} catch (err: any) {
 				if (err.code === `TooHigh`) {
 					return interaction.reply(err.message);
 				} else {
