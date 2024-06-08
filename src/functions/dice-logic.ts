@@ -1,4 +1,4 @@
-const regex = /^(\d+)?d(\d+)(k([hl])(\d)?)?/;
+const regex = /^(\d+)?d(\d+)(k([hl])(\d)?)?/i;
 
 type Dice = {
   numDice: number; 
@@ -10,7 +10,7 @@ type Dice = {
 
 export const rollDice = (input: string) => {
   console.log(`Rolling with input: ${input}`);
-  let inputArr = input.split("+");
+  let inputArr = input.toLowerCase().split("+");
   let rollStr = "";
   let bonusStr = "";
   let maxRoll = 0;
@@ -26,7 +26,7 @@ export const rollDice = (input: string) => {
     if (Number(elem)) {
       bonusStr += ` + ${elem}`;
     } else {
-      let match = regex.exec(elem.toLowerCase());
+      let match = regex.exec(elem);
       let dice = {
         numDice: typeof match![1] == "undefined" ? 1 : parseInt(match![1]),
         sides: parseInt(match![2]),
