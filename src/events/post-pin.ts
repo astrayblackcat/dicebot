@@ -1,4 +1,4 @@
-import { Events, messageLink, PermissionsBitField, EmbedBuilder} from 'discord.js';
+/*import { Events, messageLink, PermissionsBitField, EmbedBuilder} from 'discord.js';
 import { Client, TextChannel } from 'discord.js';
 import { maycord } from '../../config.json';
 import cron from 'node-cron';
@@ -35,4 +35,4 @@ module.exports = {
       if (targetChannel instanceof TextChannel) { targetChannel!.send({embeds: [embed]}) }
     });
   },
-};
+}; */

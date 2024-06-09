@@ -1,4 +1,11 @@
+import { getCharacter, replaceStats } from "./fabula-roll";
+import Database from "better-sqlite3";
+
 const regex = /^(\d+)?d(\d+)(k([hl])(\d)?)?/i;
+const db = new Database('sheets.db', { fileMustExist: true })
+const getSheet = db.prepare(`SELECT sheet_id 
+                             FROM sheets
+                             WHERE user_id = ?`)
 
 type Dice = {
   numDice: number; 
@@ -8,8 +15,9 @@ type Dice = {
   keepNum: number;
 };
 
-export const rollDice = (input: string) => {
+export const rollDice = async(input: string, user_id: string) => {
   console.log(`Rolling with input: ${input}`);
+  const stats = ['dex', 'ins', 'mig', 'wlp'];
   let inputArr = input.toLowerCase().split("+");
   let rollStr = "";
   let bonusStr = "";
@@ -17,14 +25,26 @@ export const rollDice = (input: string) => {
   let total = 0;
 
   inputArr.forEach((elem) => {
-    if (!regex.test(elem) && !Number(elem)) {
-      throw new Error("Invalid input!");
+    if (!regex.test(elem) && !Number(elem) && !stats.includes(elem)) {
+      throw new Error("Invalid input! Maybe you had a typo.");
     }
   })
 
+  if (stats.some(stat => inputArr.includes(stat))) {
+    let sheet_id = getSheet.get(user_id) as {sheet_id: string} | undefined | null
+    if (sheet_id === undefined || sheet_id === null) {
+      throw new Error('Sheet ID not found. Try registering your sheet ID with /sheet first.')
+    }
+    let char = await getCharacter(sheet_id.sheet_id)
+    inputArr = replaceStats(inputArr, char)
+    stats.forEach((stat) => input = input.replaceAll(stat, stat.toUpperCase() + `(${char[stat as keyof typeof char]})`))
+  }
+
   inputArr.forEach((elem) => {
     if (Number(elem)) {
-      bonusStr += ` + ${elem}`;
+      total += +elem;
+      maxRoll += +elem;
+      bonusStr += `+ ${elem} `;
     } else {
       let match = regex.exec(elem);
       let dice = {
@@ -40,16 +60,16 @@ export const rollDice = (input: string) => {
         throw error;
       } else {
         let currentRoll = roll(dice);
-        rollStr += `[${currentRoll.rolls}]`;
+        rollStr += `[${currentRoll.rolls}] `;
         total += currentRoll.sum;
         maxRoll += getMaxRoll(dice)
       }
     }
   });
   if (total === maxRoll) {
-    return `Rolling ${input}: ${rollStr}${bonusStr} = **${total}!**`;
+    return `Rolling ${input}:\n${rollStr}${bonusStr}= ***${total}!!!***`;
   } else {
-    return `Rolling ${input}: ${rollStr}${bonusStr} = ${total}`;
+    return `Rolling ${input}:\n${rollStr}${bonusStr}= **${total}**`;
   }
 };
 
