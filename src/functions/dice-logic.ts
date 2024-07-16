@@ -25,7 +25,7 @@ export const rollDice = async(input: string, user_id: string) => {
   let total = 0;
 
   inputArr.forEach((elem) => {
-    if (!regex.test(elem) && !Number(elem) && !stats.includes(elem) && elem !== 'initiative') {
+    if (!regex.test(elem) && !Number(elem) && !stats.includes(elem)) {
       throw new Error("Invalid input! Maybe you had a typo.");
     }
   })
@@ -37,7 +37,6 @@ export const rollDice = async(input: string, user_id: string) => {
     }
     let char = await getCharacter(sheet_id.sheet_id)
     inputArr = replaceStats(inputArr, char)
-    input = input.replaceAll('initiative', 'dex+ins')
     stats.forEach((stat) => input = input.replaceAll(stat, stat.toUpperCase() + `(${char[stat as keyof typeof char]})`))
   }
 

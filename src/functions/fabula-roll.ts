@@ -13,7 +13,6 @@ type Character = {
   shaken: boolean
   enraged: boolean
   poisoned: boolean
-  init_mod: number
 }
 
 type responseData = {
@@ -26,7 +25,6 @@ const dice_sizes: Stat[] = [
   "d6", "d8", "d10", "d12"
 ]
 
-const initiative = 'BE25:BF25'
 const statuses = {
   slow: 'BM2:BN3',
   dazed: 'BM4:BN5',
@@ -37,7 +35,7 @@ const statuses = {
 }
 const RANGES = ["DexBase", "InsBase", "MigBase", "WlpBase",
   statuses.slow, statuses.dazed, statuses.weak, statuses.shaken,
-  statuses.enraged, statuses.poisoned, initiative]
+  statuses.enraged, statuses.poisoned]
 
 export const getCharacter = async(sheetId: string) => {
   const ranges = RANGES.map((x) => `ranges=${x}`).join("&");
@@ -58,7 +56,6 @@ export const getCharacter = async(sheetId: string) => {
     shaken: data[7].values[0][0] as string === 'TRUE',
     enraged: data[8].values[0][0] as string === 'TRUE',
     poisoned: data[9].values[0][0] as string === 'TRUE',
-    init_mod: data[10].values[0][0] as number
   }
   return character
 }

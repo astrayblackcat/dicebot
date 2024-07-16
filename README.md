@@ -4,7 +4,7 @@ It's mostly built for tabletop games played over Discord and as a result it's ra
 
 #### Commands
 `/sheet` - Takes one string argument, a sheet ID from Google Sheets for a Fabula Ultima character sheet, and stores it in sheets.db.\
-`/roll` - Takes a string argument, in the form of dice notation. Can include any stats for a character sheet registered in `/sheet` in the form of shorthand, i.e, `wlp` or `str`, and additionally `initiative` which is converted to `dex+ins` upon running the command.\
+`/roll` - Takes a string argument, in the form of dice notation. Can include any stats for a character sheet registered in `/sheet` in the form of shorthand, i.e, `wlp` or `str`.\
 `kh1 or kl1` are also valid, for representing, for keeping the highest or lowest of a multi-dice roll, as well as single numbers to add bonuses.\
 Consecutive dice notation should be joined with a `+`.
 

@@ -8,7 +8,7 @@ module.exports = {
     .setDescription('Rolls dice.')
     .addStringOption(option =>
       option.setName('dice')
-        .setDescription('How many, and what type of dice to roll. e.g. "1d6", "2d10kh1", "dex", "initiative"')
+        .setDescription('How many, and what type of dice to roll. e.g. "1d6", "2d10kh1", "dex", etc.')
         .setRequired(true)),
   async execute(interaction: ChatInputCommandInteraction) {
     const roll = interaction.options.getString('dice');
