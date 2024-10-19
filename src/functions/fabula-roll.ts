@@ -18,7 +18,7 @@ type Character = {
 type responseData = {
   range: string
   majorDimension: string
-  values: Stat[][] | boolean[][] | number[][]
+  values: Stat[][] | string[][] | number[][]
 }
 
 const dice_sizes: Stat[] = [
@@ -50,12 +50,12 @@ export const getCharacter = async(sheetId: string) => {
     ins: data[1].values[0][0] as Stat,
     mig: data[2].values[0][0] as Stat,
     wlp: data[3].values[0][0] as Stat,
-    slow: data[4].values[0][0] as string === 'TRUE',
-    dazed: data[5].values[0][0] as string === 'TRUE',
-    weak: data[6].values[0][0] as string === 'TRUE',
-    shaken: data[7].values[0][0] as string === 'TRUE',
-    enraged: data[8].values[0][0] as string === 'TRUE',
-    poisoned: data[9].values[0][0] as string === 'TRUE',
+    slow: data[4].values[0][0] === 'TRUE',  // Sheets returns booleans as strings of either 'TRUE' or 'FALSE'.
+    dazed: data[5].values[0][0] === 'TRUE', // This just happens to be the cleanest way to convert them to actual booleans
+    weak: data[6].values[0][0] === 'TRUE',
+    shaken: data[7].values[0][0] === 'TRUE',
+    enraged: data[8].values[0][0] === 'TRUE',
+    poisoned: data[9].values[0][0] === 'TRUE',
   }
   return character
 }

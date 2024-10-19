@@ -11,8 +11,8 @@ type Dice = {
   numDice: number; 
   sides: number;
   isKeep: boolean;
-  keepType: string | undefined; //either undefined, h (highest), or l (lowest)
-  keepNum: number;
+  keepType: "h" | "l" | undefined; // keep highest, lowest, or neither
+  keepNum: number;                 // amount of dice to include in the total in the case of keepType being true
 };
 
 export const rollDice = async(input: string, user_id: string) => {
@@ -47,11 +47,11 @@ export const rollDice = async(input: string, user_id: string) => {
       bonusStr += `+ ${elem} `;
     } else {
       let match = regex.exec(elem);
-      let dice = {
+      let dice: Dice = {
         numDice: typeof match![1] == "undefined" ? 1 : parseInt(match![1]),
         sides: parseInt(match![2]),
         isKeep: typeof match![3] == "undefined" ? false : true,
-        keepType: typeof match![3] == "undefined" ? undefined : match![4],
+        keepType: typeof match![3] == "undefined" ? undefined : match![4] as Dice['keepType'],
         keepNum: typeof match![5] == "undefined" ? 1 : parseInt(match![5]),
       };
       if (dice.numDice > 100 || dice.sides > 100) {
