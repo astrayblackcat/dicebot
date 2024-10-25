@@ -55,7 +55,7 @@ export const rollDice = async(input: string, user_id: string) => {
         keepNum: typeof match![5] == "undefined" ? 1 : parseInt(match![5]),
       };
       if (dice.numDice > 100 || dice.sides > 100) {
-        const error = new Error(`Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.`,);
+        const error = new Error(`Numbers cannot exceed 100 or Blake will yell at you for breaking the bot.`);
         (error as any).code = "TooHigh";
         throw error;
       } else {

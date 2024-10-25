@@ -1,7 +1,7 @@
 {
-  "name": "test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "Dicebot",
+  "version": "1.1.0",
+  "description": "Discord dice bot for Fabula Ultima",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
