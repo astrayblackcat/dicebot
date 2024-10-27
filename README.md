@@ -27,9 +27,12 @@ Note that none of the build process is automated (although it really should be).
 5. Create the table with:
 ```
 CREATE TABLE sheets(
-user_id TEXT PRIMARY KEY NOT NULL,
-username TEXT NOT NULL,
-sheet_id TEXT NOT NULL
+user_id TEXT NOT NULL,
+sheet_id TEXT NOT NULL,
+character_name TEXT NOT NULL,
+active BOOLEAN DEFAULT NULL,
+UNIQUE(user_id, character_name),
+UNIQUE(user_id, active)
 );
 ```
 6. `npx tsc` (or otherwise run tsc)
