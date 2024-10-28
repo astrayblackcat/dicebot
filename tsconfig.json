@@ -7,9 +7,9 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "moduleDetection": "force",
     "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "skipLibCheck": true
   },
   "include": [
     "src/"
