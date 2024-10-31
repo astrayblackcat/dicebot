@@ -5,7 +5,8 @@ const regex = /^(\d+)?d(\d+)(k([hl])(\d)?)?/i;
 const db = new Database('sheets.db', { fileMustExist: true })
 const getSheet = db.prepare(`SELECT sheet_id 
                              FROM sheets
-                             WHERE user_id = ?`)
+                             WHERE user_id = ?
+                             AND active = true`)
 
 type Dice = {
   numDice: number; 
