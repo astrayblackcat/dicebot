@@ -26,3 +26,15 @@ export const setActive = (user_id: string, character_name: string) => {
   }
 }
 
+export const getNames = (user_id: string): string[] => {
+  const names: string[] = [];
+  const search = db.prepare(`SELECT character_name
+                           FROM sheets
+                           WHERE user_id = ?`);
+  const searchFunc = (id: string) => {return search.all(id)};
+  const searchResults = searchFunc(user_id) as {character_name: string}[]; // SQLite gives us an array of objects with a single key-value pair.
+  searchResults.forEach(obj => names.push(Object.values(obj)[0])) // Convert that array of key-value pairs into an array of strings
+
+  return names;
+}
+

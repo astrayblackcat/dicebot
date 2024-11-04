@@ -3,7 +3,7 @@ import Database from "better-sqlite3";
 
 const regex = /^(\d+)?d(\d+)(k([hl])(\d)?)?/i;
 const db = new Database('sheets.db', { fileMustExist: true })
-const getSheet = db.prepare(`SELECT sheet_id 
+const getSheet = db.prepare(`SELECT sheet_id, character_name 
                              FROM sheets
                              WHERE user_id = ?
                              AND active = true`)
@@ -24,6 +24,7 @@ export const rollDice = async(input: string, user_id: string) => {
   let bonusStr = "";
   let maxRoll = 0;
   let total = 0;
+  let charname = ""; // String to add to the roll results if there is a character sheet being used.
 
   inputArr.forEach((elem) => {
     if (!regex.test(elem) && !Number(elem) && !stats.includes(elem)) {
@@ -32,11 +33,12 @@ export const rollDice = async(input: string, user_id: string) => {
   })
 
   if (stats.some(stat => inputArr.includes(stat))) {
-    let sheet_id = getSheet.get(user_id) as {sheet_id: string} | undefined | null
-    if (sheet_id === undefined || sheet_id === null) {
+    let sheet = getSheet.get(user_id) as {sheet_id: string, character_name: string} | undefined | null
+    if (sheet === undefined || sheet === null) {
       throw new Error('Sheet ID not found. Try registering your sheet ID with /sheet first.')
     }
-    let char = await getCharacter(sheet_id.sheet_id)
+    let char = await getCharacter(sheet.sheet_id)
+    charname = `${sheet.character_name} rolled: `
     inputArr = replaceStats(inputArr, char)
     stats.forEach((stat) => input = input.replaceAll(stat, stat.toUpperCase() + `(${char[stat as keyof typeof char]})`))
   }
@@ -68,9 +70,9 @@ export const rollDice = async(input: string, user_id: string) => {
     }
   });
   if (total === maxRoll) {
-    return `Rolling ${input}:\n${rollStr}${bonusStr}= ***${total}!!!***`;
+    return `Rolling ${input}:\n${charname}${rollStr}${bonusStr}= ***${total}!!!***`;
   } else {
-    return `Rolling ${input}:\n${rollStr}${bonusStr}= **${total}**`;
+    return `Rolling ${input}:\n${charname}${rollStr}${bonusStr}= **${total}**`;
   }
 };
 
