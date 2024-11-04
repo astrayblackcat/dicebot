@@ -1,13 +1,6 @@
 import { SlashCommandBuilder } from 'discord.js';
-import type { ChatInputCommandInteraction } from 'discord.js';
-import Database from 'better-sqlite3';
-import { setActive } from '../functions/set-active';
-
-const db = new Database('sheets.db', { fileMustExist: true })
-const search = db.prepare(`SELECT user_id, character_name
-                           FROM sheets
-                           WHERE user_id = $user_id
-                           AND character_name = $character_name`);
+import type { AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
+import { setActive, getNames } from '../functions/set-active';
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,7 +9,16 @@ module.exports = {
     .addStringOption(option =>
       option.setName('character-name')
         .setDescription('The name of your character.')
+        .setAutocomplete(true)
         .setRequired(true)),
+  async autocomplete(interaction: AutocompleteInteraction) {
+    const names = getNames(interaction.user.id);
+    const focused = interaction.options.getFocused();
+    const filtered = names.filter(charname => charname.startsWith(focused));
+    await interaction.respond(
+      filtered.map(charname => ({name: charname, value: charname})),
+    );
+  },
   async execute(interaction: ChatInputCommandInteraction) {
     const user_id = interaction.user.id;
     const charname = interaction.options.getString('character-name')
