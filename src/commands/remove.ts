@@ -1,10 +1,16 @@
 import { SlashCommandBuilder } from 'discord.js';
 import type { AutocompleteInteraction, ChatInputCommandInteraction } from 'discord.js';
-import { setActive, getNames } from '../functions/sqlite-helpers';
+import Database from "better-sqlite3";
+import { getNames } from '../functions/sqlite-helpers';
+
+const db = new Database('sheets.db', { fileMustExist: true })
+const deleteChar = db.prepare(`DELETE FROM sheets
+                           WHERE user_id = $user_id
+                           AND character_name = $character_name`);
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('select')
+    .setName('remove')
     .setDescription('Select a Fabula Ultima character.')
     .addStringOption(option =>
       option.setName('character-name')
@@ -23,17 +29,16 @@ module.exports = {
     const user_id = interaction.user.id;
     const charname = interaction.options.getString('character-name')
     try {
-      setActive(user_id, charname!);
-      return interaction.reply({content: `Selected ${charname}!`, ephemeral: true});
+      deleteChar.run({ user_id: user_id, character_name: charname });
+      return interaction.reply({content: `Removed ${charname}.`, ephemeral: true});
     } 
     catch (err: any) {
-        if (err.code === 'MissingChar') {
-          return interaction.reply({ content: "No character found with that name.", ephemeral: true })
-        } else if (err instanceof Error) {
-          return interaction.reply({ content: `${err.message}. If this is unexpected, report it as a bug.`, ephemeral: true });
-        } else {
-          return interaction.reply({ content: 'Error of some unknown sort.', ephemeral: true })
-        }
+      if (err instanceof Error) {
+        return interaction.reply({ content: `${err.message}. If this is unexpected, report it as a bug.`, ephemeral: true });
+      } else {
+        return interaction.reply({ content: 'Error of some unknown sort.', ephemeral: true })
+      }
     }
   }
 }
+

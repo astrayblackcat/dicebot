@@ -35,7 +35,7 @@ export const rollDice = async(input: string, user_id: string) => {
   if (stats.some(stat => inputArr.includes(stat))) {
     let sheet = getSheet.get(user_id) as {sheet_id: string, character_name: string} | undefined | null
     if (sheet === undefined || sheet === null) {
-      throw new Error('Sheet ID not found. Try registering your sheet ID with /sheet first.')
+      throw new Error('Sheet not found. Try registering your sheet ID with /sheet first, or /select a different sheet.')
     }
     let char = await getCharacter(sheet.sheet_id)
     charname = `${sheet.character_name} rolled: `
@@ -101,9 +101,9 @@ const checkKeep = (rolls: number[], {isKeep, keepType, keepNum}: Dice) => {
   } else {
     let sortedRolls = [...rolls]
     if (keepType === "h") {
-      sortedRolls.sort((a, b) => b - a).splice(keepNum);
+      sortedRolls.sort((a, b) => b - a).splice(keepNum); // n highest in array, where keepNum is n
     } else if (keepType === "l") {
-      sortedRolls.sort((a, b) => a - b).splice(keepNum);
+      sortedRolls.sort((a, b) => a - b).splice(keepNum); // n lowest in array, where keepNum is n
     }
     result = sortedRolls.reduce(
       (accumulator, currentValue) => accumulator + currentValue)
