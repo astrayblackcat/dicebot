@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import type { ChatInputCommandInteraction } from 'discord.js';
 import Database from 'better-sqlite3';
 import { getCharacter } from '../functions/fabula-roll';
-import { setActive } from '../functions/set-active';
+import { setActive } from '../functions/sqlite-helpers';
 
 const db = new Database('sheets.db', { fileMustExist: true })
 const store = db.prepare(`INSERT INTO sheets (user_id, sheet_id, character_name)
