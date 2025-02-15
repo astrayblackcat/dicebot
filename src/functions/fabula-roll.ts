@@ -1,4 +1,4 @@
-import { sheetsApi } from '../../config.json';
+import 'dotenv/config'
 
 type Stat = "d12" | "d10" | "d8" | "d6"
 
@@ -20,6 +20,8 @@ type responseData = {
   majorDimension: string
   values: Stat[][] | string[][] | number[][]
 }
+
+const sheetsApi = process.env.sheetsApi
 
 const dice_sizes: Stat[] = [
   "d6", "d8", "d10", "d12"
