@@ -15,31 +15,10 @@ It's mostly built for tabletop games played over Discord and as a result it's ra
 Examples of valid `/roll` arguments: `1d6`, `2d20kh1+2`, `ins+wlp+1`
 
 #### Build & Run
-Requirements: node.js, npm, sqlite, discord API token and client ID, google sheets API key
-
-Note that none of the build process is automated (although it really should be).
+Requirements: node.js, npm, sqlite3, discord API token and client ID, google sheets API key
 
 1. `git clone` and `cd` into the directory.
-2. `npm install`
-3. Create `config.json` and insert the following:
-```
-"token": "discord-api-token-here",
-"clientId": "discord-client-id-here",
-"sheetsApi": "google-sheets-api-key-here"
-```
-4. Create a sqlite database named `sheets.db` and open it in sqlite
-5. Create the table with:
-```
-CREATE TABLE sheets(
-user_id TEXT NOT NULL,
-sheet_id TEXT NOT NULL,
-character_name TEXT NOT NULL,
-active BOOLEAN DEFAULT NULL,
-UNIQUE(user_id, character_name),
-UNIQUE(user_id, active)
-);
-```
-6. `npx tsc` (or otherwise run tsc)
-7. `node dist/deploy-commands.js`
-8. `node .`
+2. Create `.env` following the schema in `.env.example`. (You may delete or rename .env.example.)
+3. `npm run setup`
+4. `node .`
 

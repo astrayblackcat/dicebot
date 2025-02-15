@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
-import { token } from '../config.json';
+import 'dotenv/config'
 
 declare module "discord.js" {
   interface Client {
@@ -37,4 +37,4 @@ for (const file of eventFiles) {
   }
 }
 
-client.login(token);
+client.login(process.env.token);

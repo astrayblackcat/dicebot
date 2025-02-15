@@ -1,5 +1,5 @@
 import { REST, Routes } from 'discord.js';
-import { token, clientId } from '../config.json';
+import 'dotenv/config'
 import fs from 'node:fs'
 import path from 'node:path';
 
@@ -17,14 +17,14 @@ for (const file of commandFiles) {
   }
 }
 
-const rest = new REST().setToken(token);
+const rest = new REST().setToken(process.env.token!);
 
 (async () => {
   try {
     console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
     const data = await rest.put(
-      Routes.applicationCommands(clientId),
+      Routes.applicationCommands(process.env.clientId!),
       { body: commands },
     );
     if (data instanceof Array) {
